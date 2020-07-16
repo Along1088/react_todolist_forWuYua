@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-
-export default class TodoItem extends Component {
+import React from 'react'
+import PropTypes from 'prop-types'
+/* export default class TodoItem extends Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -35,4 +35,33 @@ export default class TodoItem extends Component {
       </div>
     )
   }
+} */
+const TodoItem = (props) => {
+  return (
+    <div className="todo_item">
+      <input
+        type="checkbox"
+        checked={props.checked}
+        onChange={() => props.handleCheckChange(props.index)}
+      />
+      <div
+        contentEditable
+        onBlur={(e) => props.handleEdit(props.index, e.target.innerText)}
+        suppressContentEditableWarning
+        className={props.checked ? 'item_text_checked' : 'item_text'}
+      >
+        {props.content}
+      </div>
+      <button onClick={() => props.handleDel(props.index)}>删除</button>
+    </div>
+  )
 }
+TodoItem.propTypes = {
+  content: PropTypes.string.isRequired,
+  checked: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  handleCheckChange: PropTypes.func.isRequired,
+  handleDel: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
+}
+export default TodoItem

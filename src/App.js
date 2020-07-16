@@ -24,6 +24,17 @@ class App extends Component {
       ],
     }
   }
+  /* 组件挂载后 */
+  componentDidMount() {
+    const list = JSON.parse(window.localStorage.getItem('list'))
+    if (!list) {
+      this.saveList(this.state.list)
+      return
+    }
+    this.setState({
+      list,
+    })
+  }
   /* 监听输入框变化 */
   handleInputChange = (e) => {
     const inputValue = e.target.value
@@ -38,35 +49,51 @@ class App extends Component {
     const { inputValue } = this.state
     if (code === 13) {
       /* 按下enter则进行添加操作 */
-      this.setState({
-        list: [...this.state.list, { value: inputValue, completed: false }],
-        inputValue: '',
-      })
+      this.setState(
+        {
+          list: [...this.state.list, { value: inputValue, completed: false }],
+          inputValue: '',
+        },
+        () => this.saveList(this.state.list)
+      )
     }
   }
   /* 删除todoitem */
   handleDel = (index) => {
     let { list } = this.state
     list.splice(index, 1)
-    this.setState({
-      list,
-    })
+    this.setState(
+      {
+        list,
+      },
+      () => this.saveList(list)
+    )
   }
   /* 复选框变化 */
   handleCheckChange = (index) => {
     let { list } = this.state
     list[index].completed = !list[index].completed
-    this.setState({
-      list,
-    })
+    this.setState(
+      {
+        list,
+      },
+      () => this.saveList(list)
+    )
   }
   /* 修改todo文本 */
   handleEdit = (index, value) => {
     let { list } = this.state
     list[index].value = value
-    this.setState({
-      list,
-    })
+    this.setState(
+      {
+        list,
+      },
+      () => this.saveList(list)
+    )
+  }
+  /* 保存到localStorage */
+  saveList = (val) => {
+    window.localStorage.setItem('list', JSON.stringify(val))
   }
   render() {
     return (
@@ -92,7 +119,7 @@ class App extends Component {
                   checked={item.completed}
                   key={index}
                   index={index}
-                  checkboxChange={this.handleCheckChange}
+                  handleCheckChange={this.handleCheckChange}
                   handleDel={this.handleDel}
                   handleEdit={this.handleEdit}
                 />
