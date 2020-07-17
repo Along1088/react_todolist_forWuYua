@@ -1,46 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-/* export default class TodoItem extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-  handleChecked = () => {
-    this.props.checkboxChange(this.props.index)
-  }
-  handleDelete = () => {
-    this.props.handleDel(this.props.index)
-  }
-  handleEdit = (e) => {
-    const value = e.target.innerText
-    this.props.handleEdit(this.props.index, value)
-  }
-  render() {
-    return (
-      <div className="todo_item">
-        <input
-          type="checkbox"
-          checked={this.props.checked}
-          onChange={this.handleChecked}
-        />
-        <div
-          contentEditable
-          suppressContentEditableWarning
-          onBlur={this.handleEdit}
-          className={this.props.checked ? 'item_text_checked' : 'item_text'}
-        >
-          {this.props.content}
-        </div>
-        <button onClick={this.handleDelete}>删除</button>
-      </div>
-    )
-  }
-} */
+import { Button, Checkbox, Popconfirm, message } from 'antd';
+
 const TodoItem = (props) => {
   return (
-    <div className="todo_item">
-      <input
-        type="checkbox"
+    <>
+      <Checkbox
         checked={props.checked}
         onChange={() => props.handleCheckChange(props.index)}
       />
@@ -52,8 +17,16 @@ const TodoItem = (props) => {
       >
         {props.content}
       </div>
-      <button onClick={() => props.handleDel(props.index)}>删除</button>
-    </div>
+      <Popconfirm
+        title="确定要删除吗?"
+        onConfirm={() => props.handleDel(props.index)}
+        onCancel={() => message.info('已取消操作！', 0.1)}
+        okText="Yes"
+        cancelText="No">
+        <Button danger type="primary">删除</Button>
+      </Popconfirm>
+
+    </>
   )
 }
 TodoItem.propTypes = {

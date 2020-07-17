@@ -1,3 +1,64 @@
-.App{
+@import '~antd/dist/antd.css';
+
+#root {
   height: 100%;
+}
+
+.ant-layout {
+  height: 100%;
+}
+
+.ant-layout-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header_wrap {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header_title {
+  flex: 2;
+  color: #fff;
+  font-size: 24px;
+}
+
+.ant-input {
+  flex: 3;
+  padding: 5px 10px;
+  font-size: 20px;
+  border-radius: 5px;
+}
+
+.ant-layout-content {
+  display: flex;
+  justify-content: center;
+}
+
+.ant-list {
+  width: 40%;
+  margin-top: 30px;
+}
+
+.ant-list-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-left: 8px solid #248f8f;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.item_text {
+  position: absolute;
+  left: 60px;
+}
+
+.item_text_checked {
+  position: absolute;
+  left: 60px;
+  text-decoration: line-through;
 }

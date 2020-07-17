@@ -1,21 +1,23 @@
 import React, { Component } from 'react'
 import TodoItem from './TodoItem'
-
+import { Layout, Input, List, message } from 'antd';
 import './App.css'
+
+const { Header, Content } = Layout;
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      inputValue: 'learn JavaScript',
+      inputValue: '',
       list: [
         {
-          value: '学英语',
-          completed: true,
+          value: '点击这里可修改待办项！',
+          completed: false,
         },
         {
           value: '做家务',
-          completed: false,
+          completed: true,
         },
         {
           value: '打游戏',
@@ -42,21 +44,23 @@ class App extends Component {
       inputValue,
     })
   }
-  /* 监听键盘按下 */
-  handleAdd = (e) => {
-    const event = window.event || e
-    const code = event.keyCode
+  /* 监听键盘按下enter */
+  handleAdd = () => {
     const { inputValue } = this.state
-    if (code === 13) {
-      /* 按下enter则进行添加操作 */
-      this.setState(
-        {
-          list: [...this.state.list, { value: inputValue, completed: false }],
-          inputValue: '',
-        },
-        () => this.saveList(this.state.list)
-      )
+    if (!inputValue) {
+      return message.warning('添加的待办项不能为空！', 0.1);
     }
+    this.setState(
+      {
+        list: [...this.state.list, { value: inputValue, completed: false }],
+        inputValue: '',
+      },
+      () => {
+        this.saveList(this.state.list)
+        message.success('添加成功！', 0.1);
+      }
+    )
+
   }
   /* 删除todoitem */
   handleDel = (index) => {
@@ -66,7 +70,11 @@ class App extends Component {
       {
         list,
       },
-      () => this.saveList(list)
+      () => {
+        this.saveList(list)
+        message.success('删除成功！', 0.1)
+      }
+
     )
   }
   /* 复选框变化 */
@@ -83,7 +91,11 @@ class App extends Component {
   /* 修改todo文本 */
   handleEdit = (index, value) => {
     let { list } = this.state
-    list[index].value = value
+    if (value) {
+      list[index].value = value
+    } else {
+      message.warning('修改失败，刷新后重试！', 2)
+    }
     this.setState(
       {
         list,
@@ -97,37 +109,36 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App">
-        <div className="todolist_header">
-          <div className="todolist_title">ToDoList</div>
-          <div className="todolist_input_wrap">
-            <input
-              type="text"
-              placeholder="添加ToDo"
+      <Layout>
+        <Header>
+          <div className="header_wrap">
+            <div className="header_title">ToDoList</div>
+            <Input
+              placeholder="添加ToDo 按enter确认"
               value={this.state.inputValue}
               onChange={this.handleInputChange}
-              onKeyUp={this.handleAdd}
+              onPressEnter={this.handleAdd}
+              size="small"
             />
           </div>
-        </div>
-        <div className="todolist_body">
-          <div className="todo_item_wrap">
-            {this.state.list.map((item, index) => {
-              return (
-                <TodoItem
-                  content={item.value}
-                  checked={item.completed}
-                  key={index}
-                  index={index}
-                  handleCheckChange={this.handleCheckChange}
-                  handleDel={this.handleDel}
-                  handleEdit={this.handleEdit}
-                />
-              )
-            })}
-          </div>
-        </div>
-      </div>
+        </Header>
+        <Content>
+          <List dataSource={this.state.list} renderItem={(item, index) => (
+            <List.Item>
+              <TodoItem
+                content={item.value}
+                checked={item.completed}
+                key={index}
+                index={index}
+                handleCheckChange={this.handleCheckChange}
+                handleDel={this.handleDel}
+                handleEdit={this.handleEdit}
+              />
+            </List.Item>
+          )}>
+          </List>
+        </Content>
+      </Layout>
     )
   }
 }
